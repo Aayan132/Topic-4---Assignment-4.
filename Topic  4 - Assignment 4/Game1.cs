@@ -13,11 +13,15 @@ namespace Topic__4___Assignment_4
 
         Texture2D bomb;
         Rectangle window;
-        Rectangle bombrect;
+        Rectangle bombRect;
         SpriteFont titleFont;
+        Rectangle timeRect;
         float seconds;
         MouseState mouseState;
         SoundEffect explode;
+        MouseState mousestate;
+        Texture2D wireCuttersTexture;
+        Rectangle mouseRectangle;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,7 +33,7 @@ namespace Topic__4___Assignment_4
         {
             // TODO: Add your initialization logic here
             window = new Rectangle(0, 0, 800, 500);
-            bombrect = new Rectangle(50, 50, 700, 500);
+            bombRect = new Rectangle(50, 50, 700, 500);
             seconds = 0;
 
             base.Initialize();
@@ -41,6 +45,8 @@ namespace Topic__4___Assignment_4
             titleFont = Content.Load<SpriteFont>("TimeFont");
             bomb = Content.Load<Texture2D>("bomb");
             explode = Content.Load<SoundEffect>("explosion");
+            wireCuttersTexture = Content.Load<Texture2D>("pliers");
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -51,10 +57,12 @@ namespace Topic__4___Assignment_4
 
             // TODO: Add your update logic here
             seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
-         
+
+            mouseState = Mouse.GetState();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
-                seconds = 0f;
+                if (bombRect.Contains(mouseState.Position))
+                    seconds = 0f;
 
             
 
@@ -72,9 +80,10 @@ namespace Topic__4___Assignment_4
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _spriteBatch.Draw(bomb, bombrect, Color.White);
+            _spriteBatch.Draw(bomb, bombRect, Color.White);
             _spriteBatch.DrawString(titleFont, (15 - seconds).ToString("0:00"), new Vector2(270, 200), Color.Black);
-            mouseState = Mouse.GetState();
+            mouseRectangle = new Rectangle(mouseState.X, mouseState.Y, 64, 64);
+            _spriteBatch.Draw(wireCuttersTexture, mouseRectangle, Color.White);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
